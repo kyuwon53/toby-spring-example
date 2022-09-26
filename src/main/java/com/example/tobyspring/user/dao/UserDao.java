@@ -1,6 +1,8 @@
 package com.example.tobyspring.user.dao;
 
 import com.example.tobyspring.user.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -8,23 +10,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class UserDao {
+    @Autowired
     private DataSource dataSource;
-
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     public void add(User user) throws SQLException {
         Connection c = this.dataSource.getConnection();
 
-        PreparedStatement ps = c.prepareStatement("INSERT into users(id, name, password) values(?,?,?)");
+        PreparedStatement ps = c.prepareStatement(
+                "insert into users(id, name, password) values(?,?,?)");
+
         ps.setString(1, user.getId());
         ps.setString(2, user.getName());
         ps.setString(3, user.getPassword());
 
         ps.executeUpdate();
-
         ps.close();
         c.close();
     }
